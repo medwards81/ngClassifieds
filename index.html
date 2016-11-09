@@ -19,6 +19,44 @@
 		</div>
 	</md-toolbar>
 
+	<md-sidenav class="md-sidenav-left md-whiteframe-z2"
+		md-component-id="left"
+		md-is-locked-open="true">
+		<md-toolbar>
+			<h1 class="md-toolbar-tools">Add a Classified</h1>
+			<md-content layout-padding>
+				<form>
+				  <md-input-container>
+				    <label for="title">Title</label>
+				    <input type="text" id="title"
+				           md-autofocus>
+				  </md-input-container>
+				  <md-input-container>
+				    <label for="price">Price</label>
+				    <input type="text" id="price">
+				  </md-input-container>
+				  <md-input-container>
+				    <label for="description">Description</label>
+				    <textarea type="text" id="description"></textarea>
+				  </md-input-container>
+				  <md-input-container>
+				    <label for="image">Image Link</label>
+				    <input type="text" id="image">
+				  </md-input-container>
+				  <md-button class="md-primary">
+				    Save
+				  </md-button>
+				  <md-button class="md-primary">
+				    Save Edit
+				  </md-button>
+				  <md-button class="md-warn">
+				    Cancel
+				  </md-button>
+				</form>
+			</md-content>
+		</md-toolbar>
+	</md-sidenav>
+
 	<md-content class="md-padding" layout="row" layout-wrap>
 		<md-card ng-repeat="classified in classifieds" flex="30">
 			<img ng-src="{{ classified.image }}" alt="">
@@ -31,9 +69,9 @@
 				</div>
 
 				<div class="classified-contact" ng-show="showContact">
-					<p><md-icon class="mdi mdi-account"></md-icon> {{ classified.contact.name }}</p>
-					<p><md-icon class="mdi mdi-phone"></md-icon> {{ classified.contact.phone }}</p>
-					<p><md-icon class="mdi mdi-email"></md-icon> {{ classified.contact.email }}</p>
+					<p><md-icon class="mdi mdi-account"></md-icon>{{ classified.contact.name }}</p>
+					<p><md-icon class="mdi mdi-phone"></md-icon>{{ classified.contact.phone }}</p>
+					<p><md-icon class="mdi mdi-email"></md-icon>{{ classified.contact.email }}</p>
 				</div>
 
 				<div layout="row">
@@ -77,5 +115,6 @@
 	<script src="node_modules/angular-material/angular-material.js"		type="text/javascript"></script>
 	<script src="scripts/app.js" 										type="text/javascript"></script>
 	<script src="components/classifieds.ctr.js" 						type="text/javascript"></script>
+	<script src="components/classifieds.fac.js" 						type="text/javascript"></script>
 </body>
 </html>
