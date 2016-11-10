@@ -30,13 +30,30 @@
 					$scope.classifieds.push(classified);
 					$scope.classified = {};
 					$scope.closeSidebar();
-					$mdToast.show(
-						$mdToast.simple()
-							.content('Classified Saved!')
-							.position('top, right')
-							.hideDelay(3000)
-					);
+					showToast('Classified saved!', 'top, right', 3000)
 				}
+			}
+
+			$scope.editClassified = function(classified) {
+				$scope.editing = true;
+				$scope.openSidebar();
+				$scope.classified = classified;
+			}
+
+			$scope.saveEdit = function() {
+				$scope.editing = false;
+				$scope.classified = {}; // reset the form
+				$scope.closeSidebar();
+				showToast('Classified updated!', 'top, right', 3000);
+			}
+
+			function showToast(message, pos, delay) {
+				$mdToast.show(
+					$mdToast.simple()
+						.content(message)
+						.position(pos)
+						.hideDelay(delay)
+				);
 			}
 		});
 })();
