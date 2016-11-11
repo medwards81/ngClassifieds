@@ -11,8 +11,6 @@
 			vm.classified;
 			vm.classifieds;
 			vm.closeSidebar = closeSidebar;
-			vm.deleteClassified = deleteClassified;
-			vm.editClassified = editClassified;
 			vm.editing;
 			vm.openSidebar = openSidebar;
 			vm.saveClassified = saveClassified;
@@ -58,32 +56,11 @@
 				}
 			}
 
-			function editClassified(classified) {
-				$state.go('classifieds.edit', {
-					id: classified.id,
-					classified: classified
-				});
-			}
-
 			function saveEdit() {
 				vm.editing = false;
 				vm.classified = {}; // reset the form
 				closeSidebar();
 				showToast('Classified updated!', 'top, right', 3000);
-			}
-
-			function deleteClassified(event, classified) {
-				var confirm = $mdDialog.confirm()
-					.title('Are you sure you want to delete ' + classified.title + '?')
-					.ok('Yes')
-					.cancel('No')
-					.targetEvent(event);
-				$mdDialog.show(confirm).then(function() {
-					var index = vm.classifieds.indexOf(classified);
-					vm.classifieds.splice(index, 1);
-				}, function() {
-					// If cancel
-				});
 			}
 
 			function showToast(message, pos, delay) {
