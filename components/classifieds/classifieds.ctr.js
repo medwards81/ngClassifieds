@@ -6,7 +6,7 @@
 		.controller('classifiedsCtrl', function($scope, $http, $state, classifiedsFactory, $mdSidenav, $mdToast, $mdDialog) {
 
 			var vm = this;
-			
+
 			vm.categories;
 			vm.classified;
 			vm.classifieds;
@@ -14,10 +14,10 @@
 			vm.deleteClassified = deleteClassified;
 			vm.editClassified = editClassified;
 			vm.editing;
-			vm.openSidebar = openSidebar;			
-			vm.saveClassified = saveClassified;			
-			vm.saveEdit = saveEdit;		
-			
+			vm.openSidebar = openSidebar;
+			vm.saveClassified = saveClassified;
+			vm.saveEdit = saveEdit;
+
 			classifiedsFactory.getClassifieds().then(function(classifieds) {
 				//console.log(classifieds.data);
 				vm.classifieds = classifieds.data;
@@ -28,6 +28,10 @@
 				classified.id = vm.classifieds.length + 1;
 				vm.classifieds.push(classified);
 				showToast('Classified saved', 'top, right', 3000);
+			});
+
+			$scope.$on('editSaved', function(event, message) {
+				showToast(message, 'top, right', 3000);
 			});
 
 			var contact = {
@@ -55,9 +59,10 @@
 			}
 
 			function editClassified(classified) {
-				vm.editing = true;
-				openSidebar();
-				vm.classified = classified;
+				$state.go('classifieds.edit', {
+					id: classified.id,
+					classified: classified
+				});
 			}
 
 			function saveEdit() {
