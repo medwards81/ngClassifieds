@@ -10,7 +10,7 @@
 			vm.categories;
 			vm.classified;
 			vm.classifieds;
-			vm.closeSidebar = closeSidebar;
+			vm.deleteClassified = deleteClassified;
 			vm.editing;
 			vm.openSidebar = openSidebar;
 			vm.saveClassified = saveClassified;
@@ -23,13 +23,15 @@
 			});
 
 			$scope.$on('newClassified', function(event, classified) {
-				classified.id = vm.classifieds.length + 1;
-				vm.classifieds.push(classified);
-				showToast('Classified saved', 'top, right', 3000);
+				saveClassified(classified);
 			});
 
-			$scope.$on('editSaved', function(event, message) {
-				showToast(message, 'top, right', 3000);
+			$scope.$on('editSaved', function(event, classified) {
+				saveEdit(classified);
+			});
+
+			$scope.$on('deleteClassified', function(event, classified) {
+				deleteClassified(classified);
 			});
 
 			var contact = {
@@ -42,25 +44,58 @@
 				$state.go('classifieds.new');
 			}
 
-			function closeSidebar() {
-				$mdSidenav('left').close();
-			}
-
 			function saveClassified(classified) {
 				if (classified) {
-					classified.contact = contact;
-					vm.classifieds.push(classified);
-					vm.classified = {};
-					closeSidebar();
-					showToast('Classified saved!', 'top, right', 3000)
+					classified.contact = contact; // for now until we wire in user accounts
+					$.ajax({
+						url: 'https://api.mlab.com/api/1/databases/'+MLAB.database+'/collections/'+MLAB.collection+'?apiKey='+MLAB.api_key,
+						data: JSON.stringify(classified),
+						type: 'POST',
+						contentType: 'application/json',
+						success: function(data, textStatus, jqXhr) {
+							//consol.log(data);
+							if (data._id) {
+								classified._id = data._id;
+							}
+							vm.classifieds.push(classified);
+							vm.classified = {};
+							showToast('Classified saved!', 'top, right', 3000);
+						},
+						eror: function(jqXhr, textStatus, errorThrown) {
+							//console.log(errorThrown);
+						}
+					});
 				}
 			}
 
-			function saveEdit() {
-				vm.editing = false;
-				vm.classified = {}; // reset the form
-				closeSidebar();
-				showToast('Classified updated!', 'top, right', 3000);
+			function saveEdit(classified) {
+				if (classified) {
+					if (classified._id) {
+						var dbId = classified._id['$oid'];
+						delete classified._id;
+						$.ajax({
+							url: 'https://api.mlab.com/api/1/databases/'+MLAB.database+'/collections/'+MLAB.collection+'/'+dbId+'?apiKey='+MLAB.api_key,
+							data: angular.toJson(classified), // use angular method to remove any '$$' hash keys, which the db api doesn't like
+							type: 'PUT',
+							contentType: 'application/json',
+							success: function(data, textStatus, jqXhr) {
+								//console.log(data)
+								//vm.editing = false;
+								//vm.classified = {}; // reset the form
+								showToast('Classified updated!', 'top, right', 3000);
+							},
+							eror: function(jqXhr, textStatus, errorThrown) {
+								console.log(errorThrown);
+							}
+						});
+					}
+				}
+			}
+
+			function deleteClassified(classified) {
+				var index = vm.classifieds.indexOf(classified);
+				vm.classifieds.splice(index, 1);
+				showToast('Classified deleted!', 'top, right', 3000);
 			}
 
 			function showToast(message, pos, delay) {

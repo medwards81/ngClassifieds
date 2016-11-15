@@ -29,13 +29,6 @@
 
 			function saveClassified(classified) {
 				if (classified) {
-
-					classified.contact = {
-						name: "marc edwards",
-						phone: "(513) 544-8803",
-						email: "mdouglasedwards@gmail.com"
-					}
-
 					$scope.$emit('newClassified', classified);
 					vm.sidenavOpen = false;
 				}

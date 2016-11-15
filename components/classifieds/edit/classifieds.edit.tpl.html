@@ -26,15 +26,14 @@
 			    <input type="text" id="image" ng-model="vm.classified.image">
 			  </md-input-container>
 			  <md-button
-			  	ng-click="vm.saveEdit()"
+			  	ng-click="vm.saveEdit(vm.classified)"
 				class="md-primary">
 			    Save Edit
 			  </md-button>
 			  <md-button ng-click="vm.closeSidebar()" class="md-warn">
 			    Cancel
 			  </md-button>
-
-			  <!--<pre>{{classified | json }}</pre>-->
+			  <pre>{{vm.classified | json }}</pre>
 			</form>
 		</md-content>
 	</md-toolbar>

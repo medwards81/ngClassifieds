@@ -13,7 +13,7 @@
                 controllerAs: 'vm'
             }
 
-            function classifiedCardController($state, $scope, $mdDialog) {
+            function classifiedCardController($state, $scope, $mdDialog, $mdToast) {
 
                 var vm = this;
 
@@ -29,13 +29,25 @@
 
                 function deleteClassified(event, classified) {
     				var confirm = $mdDialog.confirm()
-    					.title('Are you sure you want to delete ' + classified.title + '?')
+    					.title("Are you sure you want to delete '" + classified.title + "'?")
     					.ok('Yes')
     					.cancel('No')
     					.targetEvent(event);
     				$mdDialog.show(confirm).then(function() {
-    					var index = vm.classifieds.indexOf(classified);
-    					vm.classifieds.splice(index, 1);
+                        var dbId = classified._id['$oid'];
+                        if (dbId) {
+                            $.ajax({
+    							url: 'https://api.mlab.com/api/1/databases/'+MLAB.database+'/collections/'+MLAB.collection+'/'+dbId+'?apiKey='+MLAB.api_key,
+    							type: 'DELETE',
+    							contentType: 'application/json',
+    							success: function(data, textStatus, jqXhr) {
+                                    $scope.$emit('deleteClassified', classified);
+    							},
+    							eror: function(jqXhr, textStatus, errorThrown) {
+    								console.log(errorThrown);
+    							}
+    						});
+                        }
     				}, function() {
     					// If cancel
     				});

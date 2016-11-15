@@ -29,8 +29,10 @@
 			}
 
 			function saveEdit(classified) {
-                $scope.$emit('editSaved', 'Edit saved!');
-                vm.sidenavOpen = false;
+				if (classified) {
+                	$scope.$emit('editSaved', classified);
+                	vm.sidenavOpen = false;
+				}
 			}
 
 		});
